@@ -137,10 +137,16 @@ abstract class DataArray
     public int Length { get { return length; } }
     public abstract double this[int index] { get; }
     public abstract void Swap(int i, int j, double a, double b);
+    public abstract Byte[] TakeFromFile(int index);
     public void Print(int n)
     {
+        UTF8Encoding encoder = new UTF8Encoding();
+        Byte[] data = new byte[8];
         for (int i = 0; i < n; i++)
-            Console.Write(" {0:F5} ", this[i]);
+        {
+            BitConverter.GetBytes(this[i]).CopyTo(data, 0);
+            Console.Write(" {0:F5} ", encoder.GetString(data));
+        }
         Console.WriteLine();
     }
 }

@@ -11,12 +11,12 @@ namespace HeapSort_File
     {
         public MyFileArray(string filename, int n, int seed)
         {
-            double[] data = new double[n];
+            Data[] data = new Data[n];
             length = n;
             Random rand = new Random(seed);
             for (int i = 0; i < length; i++)
             {
-                data[i] = rand.NextDouble();
+                data[i] = new Data(seed*i);
             }
 
             if (File.Exists(filename)) File.Delete(filename);
@@ -26,7 +26,7 @@ namespace HeapSort_File
                     FileMode.Create)))
                 {
                     for (int j = 0; j < length; j++)
-                        writer.Write(data[j]);
+                        writer.Write(data[j].ToString());
                 }
             }
             catch (IOException ex)
@@ -48,6 +48,15 @@ namespace HeapSort_File
                 return result;
             }
         }
+
+        public override Byte[] TakeFromFile(int index)
+        {
+            Byte[] data = new Byte[8];
+            fs.Seek(8 * index, SeekOrigin.Begin);
+            fs.Read(data, 0, 8);
+            return data;
+        }
+
 
         public override void Swap(int i, int j, double a, double b)
         {
