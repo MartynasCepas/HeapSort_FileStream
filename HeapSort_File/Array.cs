@@ -45,9 +45,6 @@ namespace HeapSort_File
                 fs.Read(data, 0, 8);
 
                 var result = Encoding.UTF8.GetString(data);
-          //      result = result.Remove(0, 1);
-          //      result = result.Remove(6, 1);
-
                 var temp = new Data(result.ToCharArray());
                 return temp;
             }

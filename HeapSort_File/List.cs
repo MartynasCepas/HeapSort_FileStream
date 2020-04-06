@@ -9,13 +9,15 @@ namespace HeapSort_File
 {
     class MyFileList : DataList
     {
-        int prevNode;
-        int currentNode;
-        int nextNode;
+        Data prevNode;
+        Data currentNode;
+        Data nextNode;
+        private int prevNodeIndex;
+        private int currentNodeIndex;
+        private int nextNodeIndex;
         public MyFileList(string filename, int n, int seed)
         {
             length = n;
-            Random rand = new Random(seed);
             if (File.Exists(filename)) File.Delete(filename);
             try
             {
@@ -25,7 +27,8 @@ namespace HeapSort_File
                     writer.Write(4);
                     for (int j = 0; j < length; j++)
                     {
-                        writer.Write(rand.NextDouble());
+                        var k = new Data(seed * j);
+                        writer.Write(k.ToString());
                         writer.Write((j + 1) * 12 + 4);
                     }
                 }
@@ -36,52 +39,67 @@ namespace HeapSort_File
             }
         }
         public FileStream fs { get; set; }
-        public override double Head()
+        public override Data Head()
         {
+            prevNode = null;
             Byte[] data = new Byte[12];
             fs.Seek(0, SeekOrigin.Begin);
             fs.Read(data, 0, 4);
-            currentNode = BitConverter.ToInt32(data, 0);
-            prevNode = -1;
-            fs.Seek(currentNode, SeekOrigin.Begin);
+            currentNodeIndex = BitConverter.ToInt32(data, 0);
+
+            var res = Encoding.UTF8.GetString(data);
+            var temp = new Data(res.ToCharArray());
+
+            currentNode = temp;
+            prevNodeIndex = -1;
+            fs.Seek(currentNodeIndex, SeekOrigin.Begin);
             fs.Read(data, 0, 12);
-            double result = BitConverter.ToDouble(data, 0);
-            nextNode = BitConverter.ToInt32(data, 8);
-            return result;
+
+            res = Encoding.UTF8.GetString(data,0,8);
+
+            nextNodeIndex= BitConverter.ToInt32(data, 8);
+            temp = new Data(res.ToCharArray());
+
+            nextNode = temp;
+            return temp;
         }
-        public override double Next()
+        public override Data Next()
         {
             Byte[] data = new Byte[12];
-            fs.Seek(nextNode, SeekOrigin.Begin);
+            fs.Seek(nextNodeIndex, SeekOrigin.Begin);
             fs.Read(data, 0, 12);
             prevNode = currentNode;
+            prevNodeIndex = currentNodeIndex;
             currentNode = nextNode;
-            double result = BitConverter.ToDouble(data, 0);
-            nextNode = BitConverter.ToInt32(data, 8);
-            return result;
+            currentNodeIndex = nextNodeIndex;
+            var res = Encoding.UTF8.GetString(data,0,8);
+            var temp = new Data(res.ToCharArray());
+            nextNodeIndex = BitConverter.ToInt32(data, 8);
+            return temp;
         }
         public override void Swap(int i, int j)
         {
             Byte[] data;
-            double a = IndexAt(i);
-            double b = IndexAt(j); 
+            Data a = IndexAt(i);
+            Data b = IndexAt(j); 
 
             var temp = IndexAt(j);
-            data = BitConverter.GetBytes(a);
-            fs.Seek(currentNode, SeekOrigin.Begin);
-            fs.Write(data, 0, 8);
+            data = Data.GetEncoding(a.myData);
+            
+            fs.Seek(currentNodeIndex, SeekOrigin.Begin);
+            fs.Write(data, 0,8);
 
             temp = IndexAt(i);
-            data = BitConverter.GetBytes(b);
-            fs.Seek(currentNode, SeekOrigin.Begin);
+            data = Data.GetEncoding(b.myData);
+            fs.Seek(currentNodeIndex, SeekOrigin.Begin);
             fs.Write(data, 0, 8);
         }
 
-        public override double IndexAt(int index)
+        public override Data IndexAt(int index)
         {
             //Index was negative or larger then the amount of Nodes in the list
             if (index < 0 || index > length)
-                return 0;
+                return null;
             var tmp = Head();
             // Move to index
             for (int i = 0; i < index; i++)
