@@ -12,7 +12,7 @@ namespace HeapSort_File
 
         public Data(int seed)
         {
-            myData = new char[6];
+            myData = new char[7];
             Generator(seed);
         }
 
@@ -33,27 +33,35 @@ namespace HeapSort_File
                 myData[i] = random;
             }
 
+            myData[4] = ' ';
+
             var number = rnd.Next(100, 999).ToString();
-            for (int i = 0, k=3; i < 3; i++, k++)
+            for (int i = 0, k=4; i < 3; i++, k++)
             {
                 myData[k] = number[i];
             }
 
         }
 
-        public static Byte[] GetBytes(char[] data)
+        public static Byte[] GetEncoding(char[] data)
         {
-            Encoding ascii = Encoding.ASCII;
+            Encoding ascii = Encoding.UTF8;
             var bytes = new byte[6];
             var k = data;
             bytes = ascii.GetBytes(k);
             return bytes;
         }
 
+        public Byte[] ConvertToByteArray()
+        {
+            var b = System.Text.Encoding.UTF8.GetBytes(myData);
+            return b;
+        }
+
         public static bool operator >(Data first, Data second)
         {
-            var a = GetBytes(first.myData);
-            var b = GetBytes(second.myData);
+            var a = GetEncoding(first.myData);
+            var b = GetEncoding(second.myData);
             if (a[0] > b[0])
                 return true;
             else if (a[1] > b[1] && a[0] == b[0])
@@ -64,8 +72,8 @@ namespace HeapSort_File
             {
                 string s1 = "";
                 string s2 = "";
-                s1 = s1 + first.myData[3] + first.myData[4] + first.myData[5];
-                s2 = s2 + second.myData[3] + second.myData[4] + second.myData[5];
+                s1 = s1 + first.myData[4] + first.myData[5] + first.myData[6];
+                s2 = s2 + second.myData[4] + second.myData[5] + second.myData[6];
                 var n1 = int.Parse(s1);
                 var n2 = int.Parse(s2);
                 if (n1 > n2)
@@ -76,8 +84,8 @@ namespace HeapSort_File
 
         public static bool operator <(Data first, Data second)
         {
-            var a = GetBytes(first.myData);
-            var b = GetBytes(second.myData);
+            var a = GetEncoding(first.myData);
+            var b = GetEncoding(second.myData);
             if (a[0] < b[0])
                 return true;
             else if (a[1] < b[1] && a[0] == b[0])

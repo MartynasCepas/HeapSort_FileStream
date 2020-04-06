@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HeapSort_File;
 
 namespace HeapSort_File
 {
@@ -135,17 +136,15 @@ abstract class DataArray
 {
     protected int length;
     public int Length { get { return length; } }
-    public abstract double this[int index] { get; }
-    public abstract void Swap(int i, int j, double a, double b);
+    public abstract Data this[int index] { get; }
+    public abstract void Swap(int i, int j, Data a, Data b);
     public abstract Byte[] TakeFromFile(int index);
     public void Print(int n)
     {
-        UTF8Encoding encoder = new UTF8Encoding();
-        Byte[] data = new byte[8];
         for (int i = 0; i < n; i++)
         {
-            BitConverter.GetBytes(this[i]).CopyTo(data, 0);
-            Console.Write(" {0:F5} ", encoder.GetString(data));
+            var k = this[i];
+            Console.Write(" {0:F5} ", k.ToString());
         }
         Console.WriteLine();
     }

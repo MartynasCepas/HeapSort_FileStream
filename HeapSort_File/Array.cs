@@ -13,7 +13,6 @@ namespace HeapSort_File
         {
             Data[] data = new Data[n];
             length = n;
-            Random rand = new Random(seed);
             for (int i = 0; i < length; i++)
             {
                 data[i] = new Data(seed*i);
@@ -37,15 +36,20 @@ namespace HeapSort_File
 
         public FileStream fs { get; set; }
 
-        public override double this[int index]
+        public override Data this[int index]
         {
             get
             {
                 Byte[] data = new Byte[8];
                 fs.Seek(8 * index, SeekOrigin.Begin);
                 fs.Read(data, 0, 8);
-                double result = BitConverter.ToDouble(data, 0);
-                return result;
+
+                var result = Encoding.UTF8.GetString(data);
+          //      result = result.Remove(0, 1);
+          //      result = result.Remove(6, 1);
+
+                var temp = new Data(result.ToCharArray());
+                return temp;
             }
         }
 
@@ -58,12 +62,12 @@ namespace HeapSort_File
         }
 
 
-        public override void Swap(int i, int j, double a, double b)
+        public override void Swap(int i, int j, Data a, Data b)
         {
             Byte[] data1 = new Byte[8];
             Byte[] data2 = new Byte[8];
-            BitConverter.GetBytes(a).CopyTo(data1, 0);
-            BitConverter.GetBytes(b).CopyTo(data2, 0);
+            Data.GetEncoding(a.myData).CopyTo(data1, 0);
+            Data.GetEncoding(b.myData).CopyTo(data2, 0);
 
             fs.Seek(8 * (j), SeekOrigin.Begin);
             fs.Write(data1, 0, 8);
