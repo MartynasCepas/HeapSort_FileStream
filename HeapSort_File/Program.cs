@@ -129,6 +129,41 @@ namespace HeapSort_File
                 myfilelist.Print(n);
             }
 
+            Test_Performance(seed, filename);
+        }
+
+        private static void Test_Performance(int seed, string filename)
+        {
+            Console.WriteLine("---------------------------------");
+            Console.WriteLine("Performance test");
+            int[] amount = {100, 200, 400, 800, 1600, 3200, 6400, 12800};
+            Console.WriteLine("Array Test");
+            foreach (var k in amount)
+            {
+                MyFileArray fileArray = new MyFileArray(filename, k, seed);
+                using (fileArray.fs = new FileStream(filename, FileMode.Open,
+                    FileAccess.ReadWrite))
+                {
+                    var watch = System.Diagnostics.Stopwatch.StartNew();
+                    HeapSort(fileArray);
+                    watch.Stop();
+                    Console.WriteLine("Number of elements: " + k + " Time: " + watch.Elapsed);
+                }
+            }
+
+            Console.WriteLine("List Test");
+            foreach (var k in amount)
+            {
+                MyFileList fileArray = new MyFileList(filename, k, seed);
+                using (fileArray.fs = new FileStream(filename, FileMode.Open,
+                    FileAccess.ReadWrite))
+                {
+                    var watch = System.Diagnostics.Stopwatch.StartNew();
+                    HeapSort(fileArray);
+                    watch.Stop();
+                    Console.WriteLine("Number of elements: " + k + " Time: " + watch.Elapsed);
+                }
+            }
         }
     }
 }

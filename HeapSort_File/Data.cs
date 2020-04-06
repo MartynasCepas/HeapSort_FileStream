@@ -72,8 +72,8 @@ namespace HeapSort_File
             {
                 string s1 = "";
                 string s2 = "";
-                s1 = s1 + first.myData[4] + first.myData[5] + first.myData[6];
-                s2 = s2 + second.myData[4] + second.myData[5] + second.myData[6];
+                s1 = first.myData[4] + first.myData[5] + first.myData[6] + "";
+                s2 = second.myData[4] + second.myData[5] + second.myData[6] + "";
                 var n1 = int.Parse(s1);
                 var n2 = int.Parse(s2);
                 if (n1 > n2)
@@ -96,8 +96,8 @@ namespace HeapSort_File
             {
                 string s1 = "";
                 string s2 = "";
-                s1 = s1 + first.myData[3] + first.myData[4] + first.myData[5];
-                s2 = s2 + second.myData[3] + second.myData[4] + second.myData[5];
+                s1 = s1 + first.myData[4] + first.myData[5] + first.myData[6];
+                s2 = s2 + second.myData[4] + second.myData[5] + second.myData[6];
                 var n1 = int.Parse(s1);
                 var n2 = int.Parse(s2);
                 if (n1 < n2)

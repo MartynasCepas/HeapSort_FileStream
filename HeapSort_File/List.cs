@@ -83,13 +83,13 @@ namespace HeapSort_File
             Data a = IndexAt(i);
             Data b = IndexAt(j); 
 
-            var temp = IndexAt(j);
+            
             data = Data.GetEncoding(a.myData);
             
             fs.Seek(currentNodeIndex, SeekOrigin.Begin);
             fs.Write(data, 0,8);
 
-            temp = IndexAt(i);
+            var temp = IndexAt(i);
             data = Data.GetEncoding(b.myData);
             fs.Seek(currentNodeIndex, SeekOrigin.Begin);
             fs.Write(data, 0, 8);
